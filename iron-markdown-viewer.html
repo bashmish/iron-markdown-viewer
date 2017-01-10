@@ -1,0 +1,46 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../iron-doc-viewer/iron-doc-viewer.html">
+
+<!--
+`iron-markdown-viewer`
+Wrapper around iron-doc-viewer for guides/tutorials based on Markdown only
+
+@demo demo/index.html 
+-->
+
+<dom-module id="iron-markdown-viewer">
+  <template>
+    <iron-ajax auto url="[[src]]" handle-as="text" on-response="handleResponse"></iron-ajax>
+    <iron-doc-viewer id="docs"></iron-doc-viewer>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'iron-markdown-viewer',
+
+      properties: {
+        src: {
+          type: String
+        }
+      },
+
+      ready: function() {
+        [].forEach.call(this.$.docs.children, function(el) {
+            if (el.id === 'api') {
+                el.remove();
+            }
+        });
+      },
+
+      handleResponse: function(data) {
+        this.$.docs.descriptor = {
+            desc: data.detail.response,
+            properties: []
+        };
+      }
+
+    });
+  </script>
+</dom-module>
